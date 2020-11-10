@@ -5,8 +5,8 @@ import MapView from 'react-native-maps';
 import * as Permissions from 'expo-permissions';
 import * as Location from 'expo-location';
 import * as TaskManager from 'expo-task-manager';
-import { FontAwesome } from '@expo/vector-icons';
 import styles from './styles'; 
+import { LocationAccuracy } from 'expo-location';
 
 
 const STORAGE_KEY = 'expo-home-locations';
@@ -88,8 +88,8 @@ export default class MapScreen extends React.Component {
 
   async startLocationUpdates(accuracy = this.state.accuracy) {
     await Location.startLocationUpdatesAsync(LOCATION_UPDATES_TASK, {
-      accuracy,
-      distanceInterval:1,
+      accuracy:LocationAccuracy.High,
+      distanceInterval:5,
     });
 
     if (!this.state.isTracking) {
@@ -186,9 +186,12 @@ export default class MapScreen extends React.Component {
             <TouchableHighlight style={styles.button} onPress={this.clearLocations} title="clear locations">
               <Text style={styles.text}>Clear locations</Text>
             </TouchableHighlight>
-            <Button style={styles.button} onPress={this.toggleTracking} title="START - STOP">
-              {this.state.isTracking ? 'Stop tracking' : 'Start tracking'}
-            </Button>
+            <TouchableHighlight style={
+                        this.state.isTracking 
+                          ? styles.stopButton
+                          : styles.button} onPress={this.toggleTracking} title="START - STOP">
+              <Text style={styles.text}> {this.state.isTracking ? 'STOP TRACKING' : 'START TRACKING'} </Text>
+            </TouchableHighlight>
           </View>
         </View>
       </View>
